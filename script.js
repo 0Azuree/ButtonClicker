@@ -1,19 +1,20 @@
-const gameButton = document.getElementById('game-button');
-const leaderboardButton = document.getElementById('leaderboard-button');
-const gameSection = document.getElementById('game-section');
-const leaderboardSection = document.getElementById('leaderboard-section');
-
 const clickButton = document.getElementById('click-button');
 const clickCountDisplay = document.getElementById('click-count');
 const buyClickerButton = document.getElementById('buy-clicker');
 const clickerCostDisplay = document.getElementById('clicker-cost');
+const clickerOwnedDisplay = document.getElementById('clicker-owned');
 
 let clickCount = 0;
 let clickerCost = 50;
 let automaticClicksPerSecond = 0;
+let clickerOwned = 0;
 
 function updateClickCount() {
     clickCountDisplay.textContent = clickCount;
+}
+
+function updateClickerOwned() {
+    clickerOwnedDisplay.textContent = clickerOwned;
 }
 
 clickButton.addEventListener('click', () => {
@@ -25,9 +26,11 @@ buyClickerButton.addEventListener('click', () => {
     if (clickCount >= clickerCost) {
         clickCount -= clickerCost;
         automaticClicksPerSecond += 1;
+        clickerOwned++;
         updateClickCount();
-        updateAutomaticClicker();
-        buyClickerButton.disabled = true; // Disable button after purchase for now
+        updateClickerOwned();
+        clickerCost = Math.round(clickerCost * 1.15); // Increase cost by 15%
+        clickerCostDisplay.textContent = clickerCost;
     } else {
         alert("Not enough Button clicks!");
     }
@@ -40,19 +43,28 @@ function updateAutomaticClicker() {
     }, 1000);
 }
 
-gameButton.addEventListener('click', () => {
-    gameSection.classList.remove('hidden');
-    leaderboardSection.classList.add('hidden');
-    gameButton.classList.add('active');
-    leaderboardButton.classList.remove('active');
-});
+// Secret Combo Logic
+const secretCombo = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'b', 'a', '0'];
+let comboIndex = 0;
 
-leaderboardButton.addEventListener('click', () => {
-    gameSection.classList.add('hidden');
-    leaderboardSection.classList.remove('hidden');
-    gameButton.classList.remove('active');
-    leaderboardButton.classList.add('active');
+document.addEventListener('keydown', (event) => {
+    const key = event.key.toLowerCase();
+    const expectedKey = secretCombo[comboIndex];
+
+    if (key === expectedKey) {
+        comboIndex++;
+        if (comboIndex === secretCombo.length) {
+            clickCount += 1000000;
+            updateClickCount();
+            comboIndex = 0; // Reset combo
+            alert("Secret combo activated! You gained 1,000,000 clicks!");
+        }
+    } else {
+        comboIndex = 0; // Reset combo if wrong key is pressed
+    }
 });
 
 // Initial update
 updateClickCount();
+updateClickerOwned();
+updateAutomaticClicker();
