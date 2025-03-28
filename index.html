@@ -9,33 +9,28 @@
 <body>
     <div class="container">
         <header>
-            <button id="game-button" class="header-button active">Game</button>
-            <button id="leaderboard-button" class="header-button">Leaderboard</button>
+            <h1 class="game-title">Game</h1>
+            <a href="leaderboard.html" class="header-button">Leaderboard</a>
         </header>
         <main>
-            <section id="game-section">
-                <div class="left-side">
-                    <div class="counter-container">
-                        <p>Button clicks: <span id="click-count">0</span></p>
+            <div class="left-side">
+                <div class="counter-container">
+                    <p>Button clicks: <span id="click-count">0</span></p>
+                </div>
+                <button id="click-button" class="click-button">Button</button>
+            </div>
+            <div class="right-side">
+                <div class="shop-container">
+                    <h2>Shop</h2>
+                    <div class="shop-item">
+                        <h3>Clicker</h3>
+                        <p class="item-description">Does one click per sec per purchase</p>
+                        <p>Cost: <span id="clicker-cost">50</span> Button clicks</p>
+                        <button id="buy-clicker" class="buy-button">Buy</button>
+                        <p>Owned: <span id="clicker-owned">0</span></p>
                     </div>
-                    <button id="click-button" class="click-button">Button</button>
-                </div>
-                <div class="right-side">
-                    <div class="shop-container">
-                        <h2>Shop</h2>
-                        <div class="shop-item">
-                            <h3>Clicker</h3>
-                            <p class="item-description">Does one click per sec 1</p>
-                            <p>Cost: <span id="clicker-cost">50</span> Button clicks</p>
-                            <button id="buy-clicker" class="buy-button">Buy</button>
-                        </div>
-                        </div>
-                </div>
-            </section>
-            <section id="leaderboard-section" class="hidden">
-                <h2>Leaderboard</h2>
-                <p>Leaderboard content will go here.</p>
-            </section>
+                    </div>
+            </div>
         </main>
     </div>
 
