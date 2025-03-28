@@ -1,3 +1,8 @@
+const gameButton = document.getElementById('game-button');
+const leaderboardButton = document.getElementById('leaderboard-button');
+const gameSection = document.getElementById('game-section');
+const leaderboardSection = document.getElementById('leaderboard-section');
+
 const clickButton = document.getElementById('click-button');
 const clickCountDisplay = document.getElementById('click-count');
 const buyClickerButton = document.getElementById('buy-clicker');
@@ -34,6 +39,20 @@ function updateAutomaticClicker() {
         updateClickCount();
     }, 1000);
 }
+
+gameButton.addEventListener('click', () => {
+    gameSection.classList.remove('hidden');
+    leaderboardSection.classList.add('hidden');
+    gameButton.classList.add('active');
+    leaderboardButton.classList.remove('active');
+});
+
+leaderboardButton.addEventListener('click', () => {
+    gameSection.classList.add('hidden');
+    leaderboardSection.classList.remove('hidden');
+    gameButton.classList.remove('active');
+    leaderboardButton.classList.add('active');
+});
 
 // Initial update
 updateClickCount();
