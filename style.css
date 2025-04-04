@@ -30,17 +30,32 @@ header {
     gap: 20px;
 }
 
-.header-button, .game-title, .leaderboard-title {
+.header-button {
+    background-color: #333;
     color: #fff;
-    text-decoration: none;
-    font-size: 1.2em;
+    border: none;
     padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+    text-decoration: none; /* Remove default link styling */
 }
 
 .header-button:hover {
-    background-color: #333;
+    background-color: #444;
+}
+
+.header-button.active {
+    background-color: #555;
+}
+
+.header-link {
+    color: inherit; /* Inherit color from the button */
+    text-decoration: none;
+    display: block; /* Make the link fill the button */
+    width: 100%;
+    height: 100%;
 }
 
 main {
@@ -155,4 +170,41 @@ main {
 .buy-button:disabled {
     background-color: gray;
     cursor: not-allowed;
+}
+
+footer {
+    background-color: #222;
+    padding: 15px 20px;
+    text-align: center;
+}
+
+.code-input-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+#secret-code-input {
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    font-size: 1em;
+}
+
+.submit-button {
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #666;
 }
