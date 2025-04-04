@@ -195,16 +195,17 @@ shopTitle.addEventListener('click', () => {
     superStuffTitle.classList.remove('active-shop');
     shopContainer.classList.remove('inactive');
     superStuffContainer.classList.remove('active');
-    shopContainer.classList.add('active');
-    superStuffContainer.classList.remove('inactive');
+    superStuffContainer.style.transform = 'translateX(100%)'; // Ensure Super Stuff is hidden
+    shopContainer.style.transform = 'translateX(0)'; // Ensure Shop is visible
 });
 
 superStuffTitle.addEventListener('click', () => {
     superStuffTitle.classList.add('active-shop');
     shopTitle.classList.remove('active-shop');
-    superStuffContainer.classList.add('active');
     shopContainer.classList.add('inactive');
     superStuffContainer.classList.remove('inactive');
+    shopContainer.style.transform = 'translateX(-100%)'; // Hide Shop
+    superStuffContainer.style.transform = 'translateX(0)'; // Show Super Stuff
 });
 
 // Initial updates
