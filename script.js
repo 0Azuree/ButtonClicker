@@ -76,7 +76,7 @@ function renderAbilities() {
         useButton.addEventListener('click', () => {
             if (!doubleTimeActive) {
                 doubleTimeActive = true;
-                clickMultiplier = 2;
+                clickMultiplier = 4; // Set multiplier to 4
                 doubleTimeAvailable--;
                 updateOwned();
                 renderAbilities(); // Remove ability from list
@@ -150,7 +150,6 @@ buyQuadrupleButton.addEventListener('click', () => {
 
 buyDoubleTimeButton.addEventListener('click', () => {
     if (clickCount >= doubleTimeCost) {
-        clickCount -= doubleTimeCost;
         doubleTimeAvailable++;
         updateClickCount();
         updateOwned();
@@ -172,12 +171,12 @@ submitCodeButton.addEventListener('click', () => {
     if (code === 'iclicked') {
         clickCount += 1000;
         updateClickCount();
-        secretCodeInput.value = ''; // Clear the input
+        secretCodeInput.value = '';
         alert("Code accepted! You gained 1000 Button clicks!");
     } else if (code === 'dev01') {
         clickCount += 1000000;
         updateClickCount();
-        secretCodeInput.value = ''; // Clear the input
+        secretCodeInput.value = '';
         alert("Code accepted! You gained 1,000,000 Button clicks!");
     } else {
         alert("Invalid code!");
