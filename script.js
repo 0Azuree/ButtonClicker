@@ -98,14 +98,6 @@ function renderAbilities() {
 clickButton.addEventListener('click', () => {
     clickCount += clickMultiplier;
     updateClickCount();
-    if (doubleTimeActive) {
-        clickMultiplier *= 2;
-        clearTimeout(doubleTimeTimer);
-        doubleTimeTimer = setTimeout(() => {
-            doubleTimeActive = false;
-            clickMultiplier = 1;
-        }, 10000);
-    }
 });
 
 buyClickerButton.addEventListener('click', () => {
@@ -182,9 +174,11 @@ submitCodeButton.addEventListener('click', () => {
         updateClickCount();
         secretCodeInput.value = ''; // Clear the input
         alert("Code accepted! You gained 1000 Button clicks!");
-    } else if (code === 'sc') {
-        alert("That was the old secret code hint!");
-        secretCodeInput.value = '';
+    } else if (code === 'dev01') {
+        clickCount += 1000000;
+        updateClickCount();
+        secretCodeInput.value = ''; // Clear the input
+        alert("Code accepted! You gained 1,000,000 Button clicks!");
     } else {
         alert("Invalid code!");
     }
@@ -195,17 +189,17 @@ shopTitle.addEventListener('click', () => {
     superStuffTitle.classList.remove('active-shop');
     shopContainer.classList.remove('inactive');
     superStuffContainer.classList.remove('active');
-    superStuffContainer.style.transform = 'translateX(100%)'; // Ensure Super Stuff is hidden
-    shopContainer.style.transform = 'translateX(0)'; // Ensure Shop is visible
+    superStuffContainer.style.transform = 'translateX(100%)';
+    shopContainer.style.transform = 'translateX(0)';
 });
 
 superStuffTitle.addEventListener('click', () => {
     superStuffTitle.classList.add('active-shop');
     shopTitle.classList.remove('active-shop');
     shopContainer.classList.add('inactive');
-    superStuffContainer.classList.remove('inactive');
-    shopContainer.style.transform = 'translateX(-100%)'; // Hide Shop
-    superStuffContainer.style.transform = 'translateX(0)'; // Show Super Stuff
+    superStuffContainer.classList.add('active');
+    shopContainer.style.transform = 'translateX(-100%)';
+    superStuffContainer.style.transform = 'translateX(0)';
 });
 
 // Initial updates
