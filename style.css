@@ -19,6 +19,8 @@ body {
     max-width: 1400px; /* Increased max width */
     display: flex;
     flex-direction: column;
+    /* Removed fixed height, using min-height to allow expansion */
+    min-height: 80vh; /* Increased min height */
 }
 
 header {
@@ -192,7 +194,7 @@ main {
 }
 
 .shop-container {
-    transform: translateX(0);
+    transform: translateX(0); /* Ensure shop is visible initially */
 }
 
 .super-stuff-container {
