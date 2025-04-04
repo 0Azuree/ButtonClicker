@@ -30,6 +30,7 @@ const shopTitle = document.getElementById('shop-title');
 const superStuffTitle = document.getElementById('super-stuff-title');
 const shopContainer = document.querySelector('.shop-container');
 const superStuffContainer = document.querySelector('.super-stuff-container');
+const shopSuperContainer = document.querySelector('.shop-super-container');
 
 // Secret Code Input
 const secretCodeInput = document.getElementById('secret-code-input');
@@ -52,6 +53,37 @@ const doubleCost = 60;
 const tripleCost = 80;
 const quadrupleCost = 120;
 const doubleTimeCost = 2000;
+
+// Save and Load Data
+function saveGame() {
+    const gameState = {
+        clickCount: clickCount,
+        automaticClicksPerSecond: automaticClicksPerSecond,
+        clickerOwned: clickerOwned,
+        doubleOwned: doubleOwned,
+        tripleOwned: tripleOwned,
+        quadrupleOwned: quadrupleOwned,
+        doubleTimeAvailable: doubleTimeAvailable
+    };
+    localStorage.setItem('clickerGameSave', JSON.stringify(gameState));
+}
+
+function loadGame() {
+    const savedGame = localStorage.getItem('clickerGameSave');
+    if (savedGame) {
+        const gameState = JSON.parse(savedGame);
+        clickCount = gameState.clickCount || 0;
+        automaticClicksPerSecond = gameState.automaticClicksPerSecond || 0;
+        clickerOwned = gameState.clickerOwned || 0;
+        doubleOwned = gameState.doubleOwned || 0;
+        tripleOwned = gameState.tripleOwned || 0;
+        quadrupleOwned = gameState.quadrupleOwned || 0;
+        doubleTimeAvailable = gameState.doubleTimeAvailable || 0;
+        updateClickCount();
+        updateOwned();
+        renderAbilities();
+    }
+}
 
 function updateClickCount() {
     clickCountDisplay.textContent = clickCount;
@@ -107,6 +139,7 @@ buyClickerButton.addEventListener('click', () => {
         clickerOwned++;
         updateClickCount();
         updateOwned();
+        saveGame();
     } else {
         alert("Not enough Button clicks!");
     }
@@ -119,6 +152,7 @@ buyDoubleButton.addEventListener('click', () => {
         doubleOwned++;
         updateClickCount();
         updateOwned();
+        saveGame();
     } else {
         alert("Not enough Button clicks!");
     }
@@ -131,6 +165,7 @@ buyTripleButton.addEventListener('click', () => {
         tripleOwned++;
         updateClickCount();
         updateOwned();
+        saveGame();
     } else {
         alert("Not enough Button clicks!");
     }
@@ -143,6 +178,7 @@ buyQuadrupleButton.addEventListener('click', () => {
         quadrupleOwned++;
         updateClickCount();
         updateOwned();
+        saveGame();
     } else {
         alert("Not enough Button clicks!");
     }
@@ -153,7 +189,8 @@ buyDoubleTimeButton.addEventListener('click', () => {
         doubleTimeAvailable++;
         updateClickCount();
         updateOwned();
-        renderAbilities(); // Update abilities display
+        renderAbilities();
+        saveGame();
     } else {
         alert("Not enough Button clicks!");
     }
@@ -163,6 +200,7 @@ function updateAutomaticClicker() {
     setInterval(() => {
         clickCount += automaticClicksPerSecond;
         updateClickCount();
+        saveGame(); // Save game state periodically
     }, 1000);
 }
 
@@ -173,11 +211,13 @@ submitCodeButton.addEventListener('click', () => {
         updateClickCount();
         secretCodeInput.value = '';
         alert("Code accepted! You gained 1000 Button clicks!");
+        saveGame();
     } else if (code === 'dev01') {
         clickCount += 1000000;
         updateClickCount();
         secretCodeInput.value = '';
         alert("Code accepted! You gained 1,000,000 Button clicks!");
+        saveGame();
     } else {
         alert("Invalid code!");
     }
@@ -186,23 +226,18 @@ submitCodeButton.addEventListener('click', () => {
 shopTitle.addEventListener('click', () => {
     shopTitle.classList.add('active-shop');
     superStuffTitle.classList.remove('active-shop');
-    shopContainer.classList.remove('inactive');
-    superStuffContainer.classList.remove('active');
-    superStuffContainer.style.transform = 'translateX(100%)';
-    shopContainer.style.transform = 'translateX(0)';
+    shopSuperContainer.style.transform = 'translateX(0)';
 });
 
 superStuffTitle.addEventListener('click', () => {
     superStuffTitle.classList.add('active-shop');
     shopTitle.classList.remove('active-shop');
-    shopContainer.classList.add('inactive');
-    superStuffContainer.classList.add('active');
-    shopContainer.style.transform = 'translateX(-100%)';
-    superStuffContainer.style.transform = 'translateX(0)';
+    shopSuperContainer.style.transform = 'translateX(-50%)';
 });
 
-// Initial updates
+// Initial updates and load game
 updateClickCount();
 updateOwned();
+loadGame();
 updateAutomaticClicker();
 renderAbilities();
