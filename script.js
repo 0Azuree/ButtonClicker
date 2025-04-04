@@ -20,7 +20,6 @@ const quadrupleOwnedDisplay = document.getElementById('quadruple-owned');
 
 const buyDoubleTimeButton = document.getElementById('buy-doubletime');
 const doubleTimeCostDisplay = document.getElementById('clicker-cost-doubletime');
-const doubleTimeAvailableShopDisplay = document.getElementById('doubletime-available-shop');
 
 // Abilities Section
 const abilitiesList = document.getElementById('abilities-list');
@@ -30,7 +29,6 @@ const shopTitle = document.getElementById('shop-title');
 const superStuffTitle = document.getElementById('super-stuff-title');
 const shopContainer = document.querySelector('.shop-container');
 const superStuffContainer = document.querySelector('.super-stuff-container');
-const shopSuperContainer = document.querySelector('.shop-super-container');
 
 // Secret Code Input
 const secretCodeInput = document.getElementById('secret-code-input');
@@ -94,7 +92,6 @@ function updateOwned() {
     doubleOwnedDisplay.textContent = doubleOwned;
     tripleOwnedDisplay.textContent = tripleOwned;
     quadrupleOwnedDisplay.textContent = quadrupleOwned;
-    doubleTimeAvailableShopDisplay.textContent = doubleTimeAvailable;
 }
 
 function renderAbilities() {
@@ -102,7 +99,12 @@ function renderAbilities() {
     if (doubleTimeAvailable > 0) {
         const abilityItem = document.createElement('div');
         abilityItem.classList.add('ability-item');
-        abilityItem.textContent = 'Double Time';
+        const abilityText = document.createElement('span');
+        abilityText.textContent = 'Double Time';
+        if (doubleTimeAvailable > 1) {
+            abilityText.textContent += ` (Amount: ${doubleTimeAvailable})`;
+        }
+        abilityItem.appendChild(abilityText);
         const useButton = document.createElement('button');
         useButton.textContent = 'Use';
         useButton.addEventListener('click', () => {
@@ -111,7 +113,7 @@ function renderAbilities() {
                 clickMultiplier = 4; // Set multiplier to 4
                 doubleTimeAvailable--;
                 updateOwned();
-                renderAbilities(); // Remove ability from list
+                renderAbilities(); // Re-render to update amount
                 clearTimeout(doubleTimeTimer);
                 doubleTimeTimer = setTimeout(() => {
                     doubleTimeActive = false;
@@ -186,10 +188,11 @@ buyQuadrupleButton.addEventListener('click', () => {
 
 buyDoubleTimeButton.addEventListener('click', () => {
     if (clickCount >= doubleTimeCost) {
+        clickCount -= doubleTimeCost;
         doubleTimeAvailable++;
         updateClickCount();
         updateOwned();
-        renderAbilities();
+        renderAbilities(); // Update abilities display
         saveGame();
     } else {
         alert("Not enough Button clicks!");
@@ -226,13 +229,19 @@ submitCodeButton.addEventListener('click', () => {
 shopTitle.addEventListener('click', () => {
     shopTitle.classList.add('active-shop');
     superStuffTitle.classList.remove('active-shop');
-    shopSuperContainer.style.transform = 'translateX(0)';
+    shopContainer.classList.remove('inactive');
+    shopContainer.classList.add('active');
+    superStuffContainer.classList.remove('active');
+    superStuffContainer.classList.add('inactive');
 });
 
 superStuffTitle.addEventListener('click', () => {
     superStuffTitle.classList.add('active-shop');
     shopTitle.classList.remove('active-shop');
-    shopSuperContainer.style.transform = 'translateX(-50%)';
+    shopContainer.classList.remove('active');
+    shopContainer.classList.add('inactive');
+    superStuffContainer.classList.remove('inactive');
+    superStuffContainer.classList.add('active');
 });
 
 // Initial updates and load game
