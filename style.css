@@ -15,8 +15,8 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     overflow: hidden;
-    width: 90%; /* Adjusted width */
-    max-width: 1200px; /* Adjusted max width */
+    width: 95%; /* Increased width */
+    max-width: 1400px; /* Increased max width */
     display: flex;
     flex-direction: column;
 }
@@ -62,6 +62,7 @@ main {
     display: flex;
     padding: 20px;
     gap: 20px; /* Space between abilities, game, and shop */
+    align-items: flex-start; /* Align items to the top */
 }
 
 #abilities-section {
@@ -80,7 +81,7 @@ main {
 }
 
 #abilities-list {
-    width: 80%;
+    width: 90%;
 }
 
 .ability-item {
@@ -154,8 +155,15 @@ main {
     overflow: hidden; /* Clip the swiping effect */
 }
 
+.shop-title-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
 .shop-super-title {
-    margin: 0 10px 15px 10px;
+    margin: 0 15px;
     font-size: 1.3em;
     cursor: pointer;
     transition: color 0.3s ease;
@@ -173,13 +181,14 @@ main {
 .shop-container, .super-stuff-container {
     width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: wrap; /* Allow items to wrap */
+    justify-content: space-around; /* Distribute items evenly */
     gap: 10px;
     position: absolute;
-    top: 50px; /* Adjust based on title height */
+    top: 70px; /* Adjust based on title container height */
     left: 0;
     transition: transform 0.5s ease-in-out;
+    padding: 10px; /* Add some padding around items */
 }
 
 .shop-container {
@@ -200,14 +209,16 @@ main {
 
 .shop-item {
     background-color: #333;
-    padding: 10px; /* Reduced padding */
+    padding: 10px 15px; /* Adjusted padding */
     margin-bottom: 10px; /* Reduced margin */
     border-radius: 4px;
-    width: 80%;
-    max-width: 250px; /* Slightly reduced max width */
+    width: calc(50% - 15px); /* Two items per row with spacing */
+    max-width: none; /* Remove max width */
     display: flex;
     flex-direction: column;
     gap: 5px; /* Reduced gap */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+    min-width: 200px; /* Minimum width for items */
 }
 
 .shop-item h3 {
@@ -235,6 +246,7 @@ main {
     cursor: pointer;
     font-size: 0.9em; /* Reduced font size */
     transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: flex-start; /* Align buy button to the start */
 }
 
 .buy-button:hover {
@@ -249,6 +261,11 @@ main {
 .buy-button:disabled {
     background-color: gray;
     cursor: not-allowed;
+}
+
+.owned-text, .available-text {
+    font-size: 0.8em;
+    color: #bbb;
 }
 
 footer {
