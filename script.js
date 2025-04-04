@@ -20,7 +20,16 @@ const quadrupleOwnedDisplay = document.getElementById('quadruple-owned');
 
 const buyDoubleTimeButton = document.getElementById('buy-doubletime');
 const doubleTimeCostDisplay = document.getElementById('clicker-cost-doubletime');
-const doubleTimeAvailableDisplay = document.getElementById('doubletime-available');
+const doubleTimeAvailableShopDisplay = document.getElementById('doubletime-available-shop');
+
+// Abilities Section
+const abilitiesList = document.getElementById('abilities-list');
+
+// Shop/Super Stuff Toggling
+const shopTitle = document.getElementById('shop-title');
+const superStuffTitle = document.getElementById('super-stuff-title');
+const shopContainer = document.querySelector('.shop-container');
+const superStuffContainer = document.querySelector('.super-stuff-container');
 
 // Secret Code Input
 const secretCodeInput = document.getElementById('secret-code-input');
@@ -37,12 +46,12 @@ let doubleTimeActive = false;
 let clickMultiplier = 1;
 let doubleTimeTimer;
 
-// Costs (now constant and CORRECTED)
+// Costs
 const clickerCost = 50;
 const doubleCost = 60;
 const tripleCost = 80;
 const quadrupleCost = 120;
-const doubleTimeCost = 1000;
+const doubleTimeCost = 2000;
 
 function updateClickCount() {
     clickCountDisplay.textContent = clickCount;
@@ -53,7 +62,37 @@ function updateOwned() {
     doubleOwnedDisplay.textContent = doubleOwned;
     tripleOwnedDisplay.textContent = tripleOwned;
     quadrupleOwnedDisplay.textContent = quadrupleOwned;
-    doubleTimeAvailableDisplay.textContent = doubleTimeAvailable;
+    doubleTimeAvailableShopDisplay.textContent = doubleTimeAvailable;
+}
+
+function renderAbilities() {
+    abilitiesList.innerHTML = '';
+    if (doubleTimeAvailable > 0) {
+        const abilityItem = document.createElement('div');
+        abilityItem.classList.add('ability-item');
+        abilityItem.textContent = 'Double Time';
+        const useButton = document.createElement('button');
+        useButton.textContent = 'Use';
+        useButton.addEventListener('click', () => {
+            if (!doubleTimeActive) {
+                doubleTimeActive = true;
+                clickMultiplier = 2;
+                doubleTimeAvailable--;
+                updateOwned();
+                renderAbilities(); // Remove ability from list
+                clearTimeout(doubleTimeTimer);
+                doubleTimeTimer = setTimeout(() => {
+                    doubleTimeActive = false;
+                    clickMultiplier = 1;
+                }, 10000);
+            } else {
+                alert("Double Time is already active!");
+            }
+        });
+        abilityItem.appendChild(useButton);
+        abilitiesList.appendChild(abilityItem);
+    }
+    // Add other abilities here if you implement more
 }
 
 clickButton.addEventListener('click', () => {
@@ -123,6 +162,7 @@ buyDoubleTimeButton.addEventListener('click', () => {
         doubleTimeAvailable++;
         updateClickCount();
         updateOwned();
+        renderAbilities(); // Update abilities display
     } else {
         alert("Not enough Button clicks!");
     }
@@ -150,7 +190,25 @@ submitCodeButton.addEventListener('click', () => {
     }
 });
 
+shopTitle.addEventListener('click', () => {
+    shopTitle.classList.add('active-shop');
+    superStuffTitle.classList.remove('active-shop');
+    shopContainer.classList.remove('inactive');
+    superStuffContainer.classList.remove('active');
+    shopContainer.classList.add('active');
+    superStuffContainer.classList.remove('inactive');
+});
+
+superStuffTitle.addEventListener('click', () => {
+    superStuffTitle.classList.add('active-shop');
+    shopTitle.classList.remove('active-shop');
+    superStuffContainer.classList.add('active');
+    shopContainer.classList.add('inactive');
+    superStuffContainer.classList.remove('inactive');
+});
+
 // Initial updates
 updateClickCount();
 updateOwned();
 updateAutomaticClicker();
+renderAbilities();
