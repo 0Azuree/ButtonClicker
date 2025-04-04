@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <header>
-            <h1 class="game-title">Game</h1>
+            <button id="game-button" class="header-button active">Game</button>
             <a href="leaderboard.html" class="header-button">Leaderboard</a>
         </header>
         <main>
@@ -25,13 +25,47 @@
                     <div class="shop-item">
                         <h3>Clicker</h3>
                         <p class="item-description">Does one click per sec per purchase</p>
-                        <p>Cost: <span id="clicker-cost">50</span> Button clicks</p>
+                        <p>Cost: <span id="clicker-cost-clicker">50</span> Button clicks</p>
                         <button id="buy-clicker" class="buy-button">Buy</button>
                         <p>Owned: <span id="clicker-owned">0</span></p>
                     </div>
+                    <div class="shop-item">
+                        <h3>Double Clicks</h3>
+                        <p class="item-description">Adds 2 clicks per sec</p>
+                        <p>Cost: <span id="clicker-cost-double">60</span> Button clicks</p>
+                        <button id="buy-double" class="buy-button">Buy</button>
+                        <p>Owned: <span id="double-owned">0</span></p>
                     </div>
+                    <div class="shop-item">
+                        <h3>Triple Clicks</h3>
+                        <p class="item-description">Adds 3 clicks per sec</p>
+                        <p>Cost: <span id="clicker-cost-triple">80</span> Button clicks</p>
+                        <button id="buy-triple" class="buy-button">Buy</button>
+                        <p>Owned: <span id="triple-owned">0</span></p>
+                    </div>
+                    <div class="shop-item">
+                        <h3>Quadruple Clicks</h3>
+                        <p class="item-description">Adds 4 clicks per sec</p>
+                        <p>Cost: <span id="clicker-cost-quadruple">120</span> Button clicks</p>
+                        <button id="buy-quadruple" class="buy-button">Buy</button>
+                        <p>Owned: <span id="quadruple-owned">0</span></p>
+                    </div>
+                    <div class="shop-item">
+                        <h3>Double Time</h3>
+                        <p class="item-description">For 10 seconds, each click is 2x (stacks)</p>
+                        <p>Cost: <span id="clicker-cost-doubletime">1000</span> Button clicks</p>
+                        <button id="buy-doubletime" class="buy-button">Buy</button>
+                        <p>Available: <span id="doubletime-available">0</span></p>
+                    </div>
+                </div>
             </div>
         </main>
+        <footer>
+            <div class="code-input-container">
+                <input type="text" id="secret-code-input" placeholder="Enter code">
+                <button id="submit-code-button" class="submit-button">Submit Code</button>
+            </div>
+        </footer>
     </div>
 
     <script src="script.js"></script>
