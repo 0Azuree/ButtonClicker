@@ -46,9 +46,13 @@ let frenzyTimeTimer;
 
 // Abilities Section
 const abilitiesList = document.getElementById('abilities-list');
+const abilitiesTitle = document.getElementById('abilities-title');
+const abilitiesSection = document.getElementById('abilities-section');
 
 // Stats Section
 const playerRankDisplay = document.getElementById('player-rank');
+const statsTitle = document.getElementById('stats-title');
+const statsSection = document.getElementById('stats-section');
 
 // Shop/Super Stuff Toggling
 const shopTitle = document.getElementById('shop-title');
@@ -417,6 +421,24 @@ submitCodeButton.addEventListener('click', () => {
     } else {
         alert("Invalid code!");
     }
+});
+
+abilitiesTitle.addEventListener('click', () => {
+    abilitiesTitle.classList.add('active-abilities');
+    statsTitle.classList.remove('active-abilities');
+    abilitiesSection.classList.remove('inactive');
+    abilitiesSection.classList.add('active');
+    statsSection.classList.remove('active');
+    statsSection.classList.add('inactive');
+});
+
+statsTitle.addEventListener('click', () => {
+    statsTitle.classList.add('active-abilities');
+    abilitiesTitle.classList.remove('active-abilities');
+    abilitiesSection.classList.remove('active');
+    abilitiesSection.classList.add('inactive');
+    statsSection.classList.remove('inactive');
+    statsSection.classList.add('active');
 });
 
 shopTitle.addEventListener('click', () => {
