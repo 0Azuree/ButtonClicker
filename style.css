@@ -67,23 +67,80 @@ main {
     margin-bottom: 60px;
 }
 
-#abilities-section {
-    flex: 0.2;
+.abilities-stats-container {
+    flex: 0.4; /* Adjust as needed */
     background-color: #222;
-    padding: 15px;
     border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    overflow: hidden;
+    border-right: 1px solid #333;
 }
 
-#abilities-section h2 {
-    margin-top: 0;
+.abilities-stats-title-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
     margin-bottom: 10px;
+}
+
+.abilities-stats-title {
+    margin: 0 15px;
+    font-size: 1.3em;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.abilities-stats-title:hover {
+    color: #aaa;
+}
+
+.abilities-stats-title.active-abilities {
+    color: #eee;
+    border-bottom: 2px solid #eee;
+}
+
+.abilities-stats-content {
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease-in-out;
+}
+
+#abilities-section {
+    transform: translateX(0);
+}
+
+#stats-section {
+    transform: translateX(100%);
+    display: none;
+}
+
+#abilities-section.inactive {
+    transform: translateX(-100%);
+    display: none;
+}
+
+#stats-section.active {
+    transform: translateX(0);
+    display: block;
 }
 
 #abilities-list {
     width: 90%;
+    margin: 0 auto;
+}
+
+#stats-list {
+    width: 90%;
+    margin: 0 auto;
+}
+
+#stats-list p {
+    background-color: #333;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    text-align: center;
 }
 
 .ability-item {
@@ -109,35 +166,6 @@ main {
 
 .ability-item button:hover {
     background-color: #4cae4c;
-}
-
-#stats-section {
-    flex: 0.2;
-    background-color: #222;
-    padding: 15px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px; /* Add some space between abilities and stats */
-}
-
-#stats-section h2 {
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-
-#stats-list {
-    width: 90%;
-}
-
-#stats-list p {
-    background-color: #333;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    text-align: center;
 }
 
 .game-area {
