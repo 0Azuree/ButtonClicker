@@ -13,17 +13,21 @@
             <a href="leaderboard.html" class="header-button">Leaderboard</a>
         </header>
         <main>
-            <section id="abilities-section">
-                <h2>Abilities</h2>
-                <div id="abilities-list">
-                    </div>
-            </section>
-            <section id="stats-section">
-                <h2>Stats</h2>
-                <div id="stats-list">
-                    <p>Rank: <span id="player-rank">Garbage Clicker</span></p>
+            <div class="abilities-stats-container">
+                <div class="abilities-stats-title-container">
+                    <h2 id="abilities-title" class="abilities-stats-title active-abilities">Abilities</h2>
+                    <h2 id="stats-title" class="abilities-stats-title">Stats</h2>
                 </div>
-            </section>
+                <div id="abilities-section" class="abilities-stats-content active">
+                    <div id="abilities-list">
+                        </div>
+                </div>
+                <div id="stats-section" class="abilities-stats-content">
+                    <div id="stats-list">
+                        <p>Rank: <span id="player-rank">Garbage Clicker</span></p>
+                    </div>
+                </div>
+            </div>
             <div class="game-area">
                 <div class="counter-container">
                     <p>Button clicks: <span id="click-count">0</span></p>
