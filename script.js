@@ -208,19 +208,37 @@ function updateAutomaticClicker() {
 }
 
 submitCodeButton.addEventListener('click', () => {
-    const code = secretCodeInput.value.toLowerCase().trim();
+    const codeInput = secretCodeInput.value.trim();
+    const codeParts = codeInput.toLowerCase().split(' ');
+    const code = codeParts[0];
+
     if (code === 'iclicked') {
         clickCount += 1000;
         updateClickCount();
         secretCodeInput.value = '';
         alert("Code accepted! You gained 1000 Button clicks!");
         saveGame();
-    } else if (code === 'dev01') {
-        clickCount += 1000000;
+    } else if (code === 'removed') {
+        clickCount = 0;
         updateClickCount();
         secretCodeInput.value = '';
-        alert("Code accepted! You gained 1,000,000 Button clicks!");
+        alert("Code accepted! Your clicks have been removed.");
         saveGame();
+    } else if (code === 'addd') {
+        if (codeParts.length === 2) {
+            const amount = parseInt(codeParts[1]);
+            if (!isNaN(amount)) {
+                clickCount += amount;
+                updateClickCount();
+                secretCodeInput.value = '';
+                alert(`Code accepted! You gained ${amount} Button clicks!`);
+                saveGame();
+            } else {
+                alert("Invalid amount for 'addD' code. Please enter a number.");
+            }
+        } else {
+            alert("Invalid format for 'addD' code. Please use 'addD [number]'.");
+        }
     } else {
         alert("Invalid code!");
     }
