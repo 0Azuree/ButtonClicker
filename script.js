@@ -21,6 +21,29 @@ const quadrupleOwnedDisplay = document.getElementById('quadruple-owned');
 const buyDoubleTimeButton = document.getElementById('buy-doubletime');
 const doubleTimeCostDisplay = document.getElementById('clicker-cost-doubletime');
 
+const buyUpgradeShopButton = document.getElementById('buy-upgrade-shop');
+const upgradeShopCostDisplay = document.getElementById('upgrade-shop-cost');
+const upgradeShopOwnedDisplay = document.getElementById('upgrade-shop-owned');
+let upgradeShopOwned = 0;
+
+const buyFarmClickerButton = document.getElementById('buy-farm-clicker');
+const farmClickerCostDisplay = document.getElementById('farm-clicker-cost');
+const farmClickerOwnedDisplay = document.getElementById('farm-clicker-owned');
+let farmClickerOwned = 0;
+
+const buyFarmersButton = document.getElementById('buy-farmers');
+const farmersCostDisplay = document.getElementById('farmers-cost');
+const farmersOwnedDisplay = document.getElementById('farmers-owned');
+let farmersOwned = 0;
+
+// Super Stuff Items
+const buyFrenzyTimeButton = document.getElementById('buy-frenzy-time');
+const frenzyTimeCostDisplay = document.getElementById('frenzy-time-cost');
+const frenzyTimeAvailableShopDisplay = document.getElementById('frenzy-time-available-shop');
+let frenzyTimeAvailable = 0;
+let frenzyTimeActive = false;
+let frenzyTimeTimer;
+
 // Abilities Section
 const abilitiesList = document.getElementById('abilities-list');
 
@@ -40,17 +63,21 @@ let clickerOwned = 0;
 let doubleOwned = 0;
 let tripleOwned = 0;
 let quadrupleOwned = 0;
-let doubleTimeAvailable = 0;
-let doubleTimeActive = false;
+let dupleTimeAvailable = 0; // Renamed
+let dupleTimeActive = false; // Renamed
 let clickMultiplier = 1;
-let doubleTimeTimer;
+let dupleTimeTimer; // Renamed
 
 // Costs
 const clickerCost = 50;
 const doubleCost = 60;
 const tripleCost = 80;
 const quadrupleCost = 120;
-const doubleTimeCost = 2000;
+const dupleTimeCost = 2000; // Renamed
+const upgradeShopCost = 1000000;
+const farmClickerCost = 100000;
+const farmersCost = 80000;
+const frenzyTimeCost = 5000;
 
 // Save and Load Data
 function saveGame() {
@@ -61,7 +88,11 @@ function saveGame() {
         doubleOwned: doubleOwned,
         tripleOwned: tripleOwned,
         quadrupleOwned: quadrupleOwned,
-        doubleTimeAvailable: doubleTimeAvailable
+        dupleTimeAvailable: dupleTimeAvailable, // Renamed
+        upgradeShopOwned: upgradeShopOwned,
+        farmClickerOwned: farmClickerOwned,
+        farmersOwned: farmersOwned,
+        frenzyTimeAvailable: frenzyTimeAvailable
     };
     localStorage.setItem('clickerGameSave', JSON.stringify(gameState));
 }
@@ -76,10 +107,15 @@ function loadGame() {
         doubleOwned = gameState.doubleOwned || 0;
         tripleOwned = gameState.tripleOwned || 0;
         quadrupleOwned = gameState.quadrupleOwned || 0;
-        doubleTimeAvailable = gameState.doubleTimeAvailable || 0;
+        dupleTimeAvailable = gameState.dupleTimeAvailable || 0; // Renamed
+        upgradeShopOwned = gameState.upgradeShopOwned || 0;
+        farmClickerOwned = gameState.farmClickerOwned || 0;
+        farmersOwned = gameState.farmersOwned || 0;
+        frenzyTimeAvailable = gameState.frenzyTimeAvailable || 0;
         updateClickCount();
         updateOwned();
         renderAbilities();
+        updateShopVisibility();
     }
 }
 
@@ -92,35 +128,75 @@ function updateOwned() {
     doubleOwnedDisplay.textContent = doubleOwned;
     tripleOwnedDisplay.textContent = tripleOwned;
     quadrupleOwnedDisplay.textContent = quadrupleOwned;
+    upgradeShopOwnedDisplay.textContent = upgradeShopOwned;
+    farmClickerOwnedDisplay.textContent = farmClickerOwned;
+    farmersOwnedDisplay.textContent = farmersOwned;
+    frenzyTimeAvailableShopDisplay.textContent = frenzyTimeAvailable;
 }
 
 function renderAbilities() {
     abilitiesList.innerHTML = '';
-    if (doubleTimeAvailable > 0) {
+    if (dupleTimeAvailable > 0) { // Renamed
         const abilityItem = document.createElement('div');
         abilityItem.classList.add('ability-item');
         const abilityText = document.createElement('span');
-        abilityText.textContent = 'Double Time';
-        if (doubleTimeAvailable > 1) {
-            abilityText.textContent += ` (Amount: ${doubleTimeAvailable})`;
+        abilityText.textContent = 'Duple time'; // Renamed
+        if (dupleTimeAvailable > 1) { // Renamed
+            abilityText.textContent += ` (Amount: ${dupleTimeAvailable})`; // Renamed
         }
         abilityItem.appendChild(abilityText);
         const useButton = document.createElement('button');
         useButton.textContent = 'Use';
         useButton.addEventListener('click', () => {
-            if (!doubleTimeActive) {
-                doubleTimeActive = true;
+            if (!dupleTimeActive) { // Renamed
+                dupleTimeActive = true; // Renamed
                 clickMultiplier = 4; // Set multiplier to 4
-                doubleTimeAvailable--;
+                dupleTimeAvailable--; // Renamed
                 updateOwned();
                 renderAbilities(); // Re-render to update amount
-                clearTimeout(doubleTimeTimer);
-                doubleTimeTimer = setTimeout(() => {
-                    doubleTimeActive = false;
+                clearTimeout(dupleTimeTimer); // Renamed
+                dupleTimeTimer = setTimeout(() => { // Renamed
+                    dupleTimeActive = false; // Renamed
                     clickMultiplier = 1;
                 }, 10000);
             } else {
-                alert("Double Time is already active!");
+                alert("Duple time is already active!"); // Renamed
+            }
+        });
+        abilityItem.appendChild(useButton);
+        abilitiesList.appendChild(abilityItem);
+    }
+    if (frenzyTimeAvailable > 0) {
+        const abilityItem = document.createElement('div');
+        abilityItem.classList.add('ability-item');
+        const abilityText = document.createElement('span');
+        abilityText.textContent = 'Frenzy Time';
+        if (frenzyTimeAvailable > 1) {
+            abilityText.textContent += ` (Amount: ${frenzyTimeAvailable})`;
+        }
+        abilityItem.appendChild(abilityText);
+        const useButton = document.createElement('button');
+        useButton.textContent = 'Use';
+        useButton.addEventListener('click', () => {
+            if (!frenzyTimeActive) {
+                frenzyTimeActive = true;
+                const originalAutomaticClicks = automaticClicksPerSecond;
+                automaticClicksPerSecond = 0; // Disable regular automatic clicks
+                const frenzyCPS = 10;
+                clickMultiplier = frenzyCPS;
+
+                frenzyTimeAvailable--;
+                updateOwned();
+                renderAbilities();
+
+                clearTimeout(frenzyTimeTimer);
+                frenzyTimeTimer = setTimeout(() => {
+                    frenzyTimeActive = false;
+                    clickMultiplier = 1;
+                    automaticClicksPerSecond = originalAutomaticClicks; // Restore regular automatic clicks
+                }, 10000);
+            } else {
+                alert("Frenzy Time is already active!");
             }
         });
         abilityItem.appendChild(useButton);
@@ -187,9 +263,9 @@ buyQuadrupleButton.addEventListener('click', () => {
 });
 
 buyDoubleTimeButton.addEventListener('click', () => {
-    if (clickCount >= doubleTimeCost) {
-        clickCount -= doubleTimeCost;
-        doubleTimeAvailable++;
+    if (clickCount >= dupleTimeCost) { // Renamed
+        clickCount -= dupleTimeCost; // Deduct cost
+        dupleTimeAvailable++; // Renamed
         updateClickCount();
         updateOwned();
         renderAbilities(); // Update abilities display
@@ -199,9 +275,72 @@ buyDoubleTimeButton.addEventListener('click', () => {
     }
 });
 
+buyUpgradeShopButton.addEventListener('click', () => {
+    if (clickCount >= upgradeShopCost) {
+        clickCount -= upgradeShopCost;
+        upgradeShopOwned = 1;
+        updateClickCount();
+        updateOwned();
+        updateShopVisibility();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+buyFarmClickerButton.addEventListener('click', () => {
+    if (clickCount >= farmClickerCost) {
+        clickCount -= farmClickerCost;
+        farmClickerOwned++;
+        updateClickCount();
+        updateOwned();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+buyFarmersButton.addEventListener('click', () => {
+    if (clickCount >= farmersCost) {
+        clickCount -= farmersCost;
+        farmersOwned++;
+        updateClickCount();
+        updateOwned();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+buyFrenzyTimeButton.addEventListener('click', () => {
+    if (clickCount >= frenzyTimeCost) {
+        clickCount -= frenzyTimeCost;
+        frenzyTimeAvailable++;
+        updateClickCount();
+        updateOwned();
+        renderAbilities();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+function updateShopVisibility() {
+    const farmClickerItem = document.getElementById('farm-clicker-item');
+    const farmersItem = document.getElementById('farmers-item');
+    if (upgradeShopOwned > 0) {
+        farmClickerItem.style.display = 'flex';
+        farmersItem.style.display = 'flex';
+    } else {
+        farmClickerItem.style.display = 'none';
+        farmersItem.style.display = 'none';
+    }
+}
+
 function updateAutomaticClicker() {
     setInterval(() => {
         clickCount += automaticClicksPerSecond;
+        clickCount += farmersOwned * 5000; // Add clicks from farmers
         updateClickCount();
         saveGame(); // Save game state periodically
     }, 1000);
@@ -268,3 +407,4 @@ updateOwned();
 loadGame();
 updateAutomaticClicker();
 renderAbilities();
+updateShopVisibility();
