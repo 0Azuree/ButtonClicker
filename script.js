@@ -47,6 +47,9 @@ let frenzyTimeTimer;
 // Abilities Section
 const abilitiesList = document.getElementById('abilities-list');
 
+// Stats Section
+const playerRankDisplay = document.getElementById('player-rank');
+
 // Shop/Super Stuff Toggling
 const shopTitle = document.getElementById('shop-title');
 const superStuffTitle = document.getElementById('super-stuff-title');
@@ -78,6 +81,32 @@ const upgradeShopCost = 1000000;
 const farmClickerCost = 100000;
 const farmersCost = 80000;
 const frenzyTimeCost = 5000;
+
+function getRank(clicks) {
+    if (clicks >= 1000000000000) {
+        return '#1 Clicker';
+    } else if (clicks >= 1000000000) {
+        return 'Grandmaster Clicker';
+    } else if (clicks >= 200000000) {
+        return 'Master Clicker';
+    } else if (clicks >= 50000000) {
+        return 'Champion Clicker';
+    } else if (clicks >= 1000000) {
+        return 'Diamond Clicker';
+    } else if (clicks >= 500000) {
+        return 'Platinum Clicker';
+    } else if (clicks >= 150000) {
+        return 'Gold Clicker';
+    } else if (clicks >= 50000) {
+        return 'Iron Clicker';
+    } else if (clicks >= 10000) {
+        return 'Bronze Clicker';
+    } else if (clicks >= 100) {
+        return 'Unranked Clicker';
+    } else {
+        return 'Garbage Clicker';
+    }
+}
 
 // Save and Load Data
 function saveGame() {
@@ -117,10 +146,12 @@ function loadGame() {
         renderAbilities();
         updateShopVisibility();
     }
+    updateRankDisplay(); // Update rank on load
 }
 
 function updateClickCount() {
     clickCountDisplay.textContent = clickCount;
+    updateRankDisplay(); // Update rank when clicks change
 }
 
 function updateOwned() {
@@ -132,6 +163,10 @@ function updateOwned() {
     farmClickerOwnedDisplay.textContent = farmClickerOwned;
     farmersOwnedDisplay.textContent = farmersOwned;
     frenzyTimeAvailableShopDisplay.textContent = frenzyTimeAvailable;
+}
+
+function updateRankDisplay() {
+    playerRankDisplay.textContent = getRank(clickCount);
 }
 
 function renderAbilities() {
@@ -279,6 +314,7 @@ buyUpgradeShopButton.addEventListener('click', () => {
     if (clickCount >= upgradeShopCost) {
         clickCount -= upgradeShopCost;
         upgradeShopOwned = 1;
+        clickCount = 0; // Remove clicks after purchase
         updateClickCount();
         updateOwned();
         updateShopVisibility();
@@ -408,3 +444,4 @@ loadGame();
 updateAutomaticClicker();
 renderAbilities();
 updateShopVisibility();
+updateRankDisplay(); // Initial rank display
