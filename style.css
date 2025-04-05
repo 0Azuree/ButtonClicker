@@ -1,314 +1,410 @@
-body {
-    font-family: sans-serif;
-    background-color: #000;
-    color: #fff;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+const clickButton = document.getElementById('click-button');
+const clickCountDisplay = document.getElementById('click-count');
+
+// Shop Items
+const buyClickerButton = document.getElementById('buy-clicker');
+const clickerCostDisplay = document.getElementById('clicker-cost-clicker');
+const clickerOwnedDisplay = document.getElementById('clicker-owned');
+
+const buyDoubleButton = document.getElementById('buy-double');
+const doubleCostDisplay = document.getElementById('clicker-cost-double');
+const doubleOwnedDisplay = document.getElementById('double-owned');
+
+const buyTripleButton = document.getElementById('buy-triple');
+const tripleCostDisplay = document.getElementById('clicker-cost-triple');
+const tripleOwnedDisplay = document.getElementById('triple-owned');
+
+const buyQuadrupleButton = document.getElementById('buy-quadruple');
+const quadrupleCostDisplay = document.getElementById('clicker-cost-quadruple');
+const quadrupleOwnedDisplay = document.getElementById('quadruple-owned');
+
+const buyDoubleTimeButton = document.getElementById('buy-doubletime');
+const doubleTimeCostDisplay = document.getElementById('clicker-cost-doubletime');
+
+const buyUpgradeShopButton = document.getElementById('buy-upgrade-shop');
+const upgradeShopCostDisplay = document.getElementById('upgrade-shop-cost');
+const upgradeShopOwnedDisplay = document.getElementById('upgrade-shop-owned');
+let upgradeShopOwned = 0;
+
+const buyFarmClickerButton = document.getElementById('buy-farm-clicker');
+const farmClickerCostDisplay = document.getElementById('farm-clicker-cost');
+const farmClickerOwnedDisplay = document.getElementById('farm-clicker-owned');
+let farmClickerOwned = 0;
+
+const buyFarmersButton = document.getElementById('buy-farmers');
+const farmersCostDisplay = document.getElementById('farmers-cost');
+const farmersOwnedDisplay = document.getElementById('farmers-owned');
+let farmersOwned = 0;
+
+// Super Stuff Items
+const buyFrenzyTimeButton = document.getElementById('buy-frenzy-time');
+const frenzyTimeCostDisplay = document.getElementById('frenzy-time-cost');
+const frenzyTimeAvailableShopDisplay = document.getElementById('frenzy-time-available-shop');
+let frenzyTimeAvailable = 0;
+let frenzyTimeActive = false;
+let frenzyTimeTimer;
+
+// Abilities Section
+const abilitiesList = document.getElementById('abilities-list');
+
+// Shop/Super Stuff Toggling
+const shopTitle = document.getElementById('shop-title');
+const superStuffTitle = document.getElementById('super-stuff-title');
+const shopContainer = document.querySelector('.shop-container');
+const superStuffContainer = document.querySelector('.super-stuff-container');
+
+// Secret Code Input
+const secretCodeInput = document.getElementById('secret-code-input');
+const submitCodeButton = document.getElementById('submit-code-button');
+
+let clickCount = 0;
+let automaticClicksPerSecond = 0;
+let clickerOwned = 0;
+let doubleOwned = 0;
+let tripleOwned = 0;
+let quadrupleOwned = 0;
+let dupleTimeAvailable = 0; // Renamed
+let dupleTimeActive = false; // Renamed
+let clickMultiplier = 1;
+let dupleTimeTimer; // Renamed
+
+// Costs
+const clickerCost = 50;
+const doubleCost = 60;
+const tripleCost = 80;
+const quadrupleCost = 120;
+const dupleTimeCost = 2000; // Renamed
+const upgradeShopCost = 1000000;
+const farmClickerCost = 100000;
+const farmersCost = 80000;
+const frenzyTimeCost = 5000;
+
+// Save and Load Data
+function saveGame() {
+    const gameState = {
+        clickCount: clickCount,
+        automaticClicksPerSecond: automaticClicksPerSecond,
+        clickerOwned: clickerOwned,
+        doubleOwned: doubleOwned,
+        tripleOwned: tripleOwned,
+        quadrupleOwned: quadrupleOwned,
+        dupleTimeAvailable: dupleTimeAvailable, // Renamed
+        upgradeShopOwned: upgradeShopOwned,
+        farmClickerOwned: farmClickerOwned,
+        farmersOwned: farmersOwned,
+        frenzyTimeAvailable: frenzyTimeAvailable
+    };
+    localStorage.setItem('clickerGameSave', JSON.stringify(gameState));
 }
 
-.container {
-    background-color: #111;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    width: 95%;
-    max-width: 1400px;
-    display: flex;
-    flex-direction: column;
-    min-height: 90vh;
+function loadGame() {
+    const savedGame = localStorage.getItem('clickerGameSave');
+    if (savedGame) {
+        const gameState = JSON.parse(savedGame);
+        clickCount = gameState.clickCount || 0;
+        automaticClicksPerSecond = gameState.automaticClicksPerSecond || 0;
+        clickerOwned = gameState.clickerOwned || 0;
+        doubleOwned = gameState.doubleOwned || 0;
+        tripleOwned = gameState.tripleOwned || 0;
+        quadrupleOwned = gameState.quadrupleOwned || 0;
+        dupleTimeAvailable = gameState.dupleTimeAvailable || 0; // Renamed
+        upgradeShopOwned = gameState.upgradeShopOwned || 0;
+        farmClickerOwned = gameState.farmClickerOwned || 0;
+        farmersOwned = gameState.farmersOwned || 0;
+        frenzyTimeAvailable = gameState.frenzyTimeAvailable || 0;
+        updateClickCount();
+        updateOwned();
+        renderAbilities();
+        updateShopVisibility();
+    }
 }
 
-header {
-    background-color: #222;
-    padding: 10px 20px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
+function updateClickCount() {
+    clickCountDisplay.textContent = clickCount;
 }
 
-.header-button {
-    background-color: #333;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
+function updateOwned() {
+    clickerOwnedDisplay.textContent = clickerOwned;
+    doubleOwnedDisplay.textContent = doubleOwned;
+    tripleOwnedDisplay.textContent = tripleOwned;
+    quadrupleOwnedDisplay.textContent = quadrupleOwned;
+    upgradeShopOwnedDisplay.textContent = upgradeShopOwned;
+    farmClickerOwnedDisplay.textContent = farmClickerOwned;
+    farmersOwnedDisplay.textContent = farmersOwned;
+    frenzyTimeAvailableShopDisplay.textContent = frenzyTimeAvailable;
 }
 
-.header-button:hover {
-    background-color: #444;
+function renderAbilities() {
+    abilitiesList.innerHTML = '';
+    if (dupleTimeAvailable > 0) { // Renamed
+        const abilityItem = document.createElement('div');
+        abilityItem.classList.add('ability-item');
+        const abilityText = document.createElement('span');
+        abilityText.textContent = 'Duple time'; // Renamed
+        if (dupleTimeAvailable > 1) { // Renamed
+            abilityText.textContent += ` (Amount: ${dupleTimeAvailable})`; // Renamed
+        }
+        abilityItem.appendChild(abilityText);
+        const useButton = document.createElement('button');
+        useButton.textContent = 'Use';
+        useButton.addEventListener('click', () => {
+            if (!dupleTimeActive) { // Renamed
+                dupleTimeActive = true; // Renamed
+                clickMultiplier = 4; // Set multiplier to 4
+                dupleTimeAvailable--; // Renamed
+                updateOwned();
+                renderAbilities(); // Re-render to update amount
+                clearTimeout(dupleTimeTimer); // Renamed
+                dupleTimeTimer = setTimeout(() => { // Renamed
+                    dupleTimeActive = false; // Renamed
+                    clickMultiplier = 1;
+                }, 10000);
+            } else {
+                alert("Duple time is already active!"); // Renamed
+            }
+        });
+        abilityItem.appendChild(useButton);
+        abilitiesList.appendChild(abilityItem);
+    }
+    if (frenzyTimeAvailable > 0) {
+        const abilityItem = document.createElement('div');
+        abilityItem.classList.add('ability-item');
+        const abilityText = document.createElement('span');
+        abilityText.textContent = 'Frenzy Time';
+        if (frenzyTimeAvailable > 1) {
+            abilityText.textContent += ` (Amount: ${frenzyTimeAvailable})`;
+        }
+        abilityItem.appendChild(abilityText);
+        const useButton = document.createElement('button');
+        useButton.textContent = 'Use';
+        useButton.addEventListener('click', () => {
+            if (!frenzyTimeActive) {
+                frenzyTimeActive = true;
+                const originalAutomaticClicks = automaticClicksPerSecond;
+                automaticClicksPerSecond = 0; // Disable regular automatic clicks
+                const frenzyCPS = 10;
+                clickMultiplier = frenzyCPS;
+
+                frenzyTimeAvailable--;
+                updateOwned();
+                renderAbilities();
+
+                clearTimeout(frenzyTimeTimer);
+                frenzyTimeTimer = setTimeout(() => {
+                    frenzyTimeActive = false;
+                    clickMultiplier = 1;
+                    automaticClicksPerSecond = originalAutomaticClicks; // Restore regular automatic clicks
+                }, 10000);
+            } else {
+                alert("Frenzy Time is already active!");
+            }
+        });
+        abilityItem.appendChild(useButton);
+        abilitiesList.appendChild(abilityItem);
+    }
+    // Add other abilities here if you implement more
 }
 
-.header-button.active {
-    background-color: #555;
+clickButton.addEventListener('click', () => {
+    clickCount += clickMultiplier;
+    updateClickCount();
+});
+
+buyClickerButton.addEventListener('click', () => {
+    if (clickCount >= clickerCost) {
+        clickCount -= clickerCost;
+        automaticClicksPerSecond += 1;
+        clickerOwned++;
+        updateClickCount();
+        updateOwned();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+buyDoubleButton.addEventListener('click', () => {
+    if (clickCount >= doubleCost) {
+        clickCount -= doubleCost;
+        automaticClicksPerSecond += 2;
+        doubleOwned++;
+        updateClickCount();
+        updateOwned();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+buyTripleButton.addEventListener('click', () => {
+    if (clickCount >= tripleCost) {
+        clickCount -= tripleCost;
+        automaticClicksPerSecond += 3;
+        tripleOwned++;
+        updateClickCount();
+        updateOwned();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+buyQuadrupleButton.addEventListener('click', () => {
+    if (clickCount >= quadrupleCost) {
+        clickCount -= quadrupleCost;
+        automaticClicksPerSecond += 4;
+        quadrupleOwned++;
+        updateClickCount();
+        updateOwned();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+buyDoubleTimeButton.addEventListener('click', () => {
+    if (clickCount >= dupleTimeCost) { // Renamed
+        clickCount -= dupleTimeCost; // Deduct cost
+        dupleTimeAvailable++; // Renamed
+        updateClickCount();
+        updateOwned();
+        renderAbilities(); // Update abilities display
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+buyUpgradeShopButton.addEventListener('click', () => {
+    if (clickCount >= upgradeShopCost) {
+        clickCount -= upgradeShopCost;
+        upgradeShopOwned = 1;
+        updateClickCount();
+        updateOwned();
+        updateShopVisibility();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+buyFarmClickerButton.addEventListener('click', () => {
+    if (clickCount >= farmClickerCost) {
+        clickCount -= farmClickerCost;
+        farmClickerOwned++;
+        updateClickCount();
+        updateOwned();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+buyFarmersButton.addEventListener('click', () => {
+    if (clickCount >= farmersCost) {
+        clickCount -= farmersCost;
+        farmersOwned++;
+        updateClickCount();
+        updateOwned();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+buyFrenzyTimeButton.addEventListener('click', () => {
+    if (clickCount >= frenzyTimeCost) {
+        clickCount -= frenzyTimeCost;
+        frenzyTimeAvailable++;
+        updateClickCount();
+        updateOwned();
+        renderAbilities();
+        saveGame();
+    } else {
+        alert("Not enough Button clicks!");
+    }
+});
+
+function updateShopVisibility() {
+    const farmClickerItem = document.getElementById('farm-clicker-item');
+    const farmersItem = document.getElementById('farmers-item');
+    if (upgradeShopOwned > 0) {
+        farmClickerItem.style.display = 'flex';
+        farmersItem.style.display = 'flex';
+    } else {
+        farmClickerItem.style.display = 'none';
+        farmersItem.style.display = 'none';
+    }
 }
 
-.header-link {
-    color: inherit;
-    text-decoration: none;
-    display: block;
-    width: 100%;
-    height: 100%;
+function updateAutomaticClicker() {
+    setInterval(() => {
+        clickCount += automaticClicksPerSecond;
+        clickCount += farmersOwned * 5000; // Add clicks from farmers
+        updateClickCount();
+        saveGame(); // Save game state periodically
+    }, 1000);
 }
 
-main {
-    display: flex;
-    padding: 20px;
-    gap: 20px;
-    align-items: flex-start;
-    margin-bottom: 60px;
-}
+submitCodeButton.addEventListener('click', () => {
+    const codeInput = secretCodeInput.value.trim();
+    const codeParts = codeInput.toLowerCase().split(' ');
+    const code = codeParts[0];
 
-#abilities-section {
-    flex: 0.2;
-    background-color: #222;
-    padding: 15px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    if (code === 'iclicked') {
+        clickCount += 1000;
+        updateClickCount();
+        secretCodeInput.value = '';
+        alert("Code accepted! You gained 1000 Button clicks!");
+        saveGame();
+    } else if (code === 'removed') {
+        clickCount = 0;
+        updateClickCount();
+        secretCodeInput.value = '';
+        alert("Code accepted! Your clicks have been removed.");
+        saveGame();
+    } else if (code === 'addd') {
+        if (codeParts.length === 2) {
+            const amount = parseInt(codeParts[1]);
+            if (!isNaN(amount)) {
+                clickCount += amount;
+                updateClickCount();
+                secretCodeInput.value = '';
+                alert(`Code accepted! You gained ${amount} Button clicks!`);
+                saveGame();
+            } else {
+                alert("Invalid amount for 'addD' code. Please enter a number.");
+            }
+        } else {
+            alert("Invalid format for 'addD' code. Please use 'addD [number]'.");
+        }
+    } else {
+        alert("Invalid code!");
+    }
+});
 
-#abilities-section h2 {
-    margin-top: 0;
-    margin-bottom: 10px;
-}
+shopTitle.addEventListener('click', () => {
+    shopTitle.classList.add('active-shop');
+    superStuffTitle.classList.remove('active-shop');
+    shopContainer.classList.remove('inactive');
+    shopContainer.classList.add('active');
+    superStuffContainer.classList.remove('active');
+    superStuffContainer.classList.add('inactive');
+});
 
-#abilities-list {
-    width: 90%;
-}
+superStuffTitle.addEventListener('click', () => {
+    superStuffTitle.classList.add('active-shop');
+    shopTitle.classList.remove('active-shop');
+    shopContainer.classList.remove('active');
+    shopContainer.classList.add('inactive');
+    superStuffContainer.classList.remove('inactive');
+    superStuffContainer.classList.add('active');
+});
 
-.ability-item {
-    background-color: #333;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.ability-item button {
-    background-color: #5cb85c;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.3s ease;
-}
-
-.ability-item button:hover {
-    background-color: #4cae4c;
-}
-
-.game-area {
-    flex: 0.4;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-}
-
-.counter-container {
-    margin-bottom: 20px;
-}
-
-.click-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px 32px;
-    font-size: 1.5em;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.click-button:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
-}
-
-.click-button:active {
-    transform: scale(0.95);
-}
-
-.shop-super-container {
-    flex: 0.4;
-    background-color: #222;
-    padding: 15px;
-    border-radius: 8px;
-    border-left: 1px solid #333;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    overflow: hidden;
-    height: 400px; /* Increased height for floating effect */
-}
-
-.shop-title-container {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    margin-bottom: 10px;
-}
-
-.shop-super-title {
-    margin: 0 15px;
-    font-size: 1.3em;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.shop-super-title:hover {
-    color: #aaa;
-}
-
-.shop-super-title.active-shop {
-    color: #eee;
-    border-bottom: 2px solid #eee;
-}
-
-.shop-container, .super-stuff-container {
-    width: 100%;
-    height: calc(100% - 40px); /* Adjust height for title container */
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 8px;
-    overflow-y: auto;
-    align-content: flex-start;
-    transition: transform 0.3s ease-in-out;
-}
-
-.shop-container {
-    transform: translateX(0);
-}
-
-.super-stuff-container {
-    transform: translateX(100%);
-    display: none; /* Initially hide Super Stuff */
-}
-
-.shop-container.inactive {
-    transform: translateX(-100%);
-    display: none; /* Hide Shop when Super Stuff is active */
-}
-
-.super-stuff-container.active {
-    transform: translateX(0);
-    display: flex; /* Show Super Stuff when active */
-}
-
-.shop-item {
-    background-color: #333;
-    padding: 8px 12px;
-    border-radius: 4px;
-    width: calc(50% - 8px - 4px);
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    box-sizing: border-box;
-    min-height: auto;
-}
-
-.shop-item h3 {
-    margin-top: 0;
-    margin-bottom: 2px;
-    font-size: 0.9em;
-}
-
-.item-description {
-    font-size: 0.7em;
-    color: #aaa;
-}
-
-.shop-item p {
-    margin-bottom: 2px;
-    font-size: 0.8em;
-}
-
-.buy-button {
-    background-color: #008CBA;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.8em;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    align-self: flex-start;
-}
-
-.buy-button:hover {
-    background-color: #0077a3;
-    transform: scale(1.02);
-}
-
-.buy-button:active {
-    transform: scale(0.98);
-}
-
-.buy-button:disabled {
-    background-color: gray;
-    cursor: not-allowed;
-}
-
-.owned-text, .available-text {
-    font-size: 0.7em;
-    color: #bbb;
-}
-
-footer.fixed-bottom {
-    background-color: #222;
-    padding: 15px 20px;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-}
-
-.code-input-container {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-}
-
-#secret-code-input {
-    padding: 10px;
-    border: 1px solid #333;
-    border-radius: 5px;
-    background-color: #333;
-    color: #fff;
-    font-size: 1em;
-}
-
-.submit-button {
-    background-color: #555;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-}
-
-.submit-button:hover {
-    background-color: #666;
-}
+// Initial updates and load game
+updateClickCount();
+updateOwned();
+loadGame();
+updateAutomaticClicker();
+renderAbilities();
+updateShopVisibility();
